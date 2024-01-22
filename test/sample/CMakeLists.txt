@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Sample)
 
+add_compile_options(--coverage -O0)
+add_link_options(--coverage)
+
 add_library(fibonacci src/fibonacci.cpp)
 target_include_directories(fibonacci PUBLIC include)
 
