@@ -36,6 +36,7 @@ function(test_sample)
   find_program(CTEST_PROGRAM ctest REQUIRED)
   execute_process(
     COMMAND ${CTEST_PROGRAM}
+      -C debug
       --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
       --no-tests=error
     RESULT_VARIABLE RES
