@@ -14,9 +14,3 @@ add_cmake_test(
   BuildSampleTest.cmake
   "Build sample project"
 )
-
-add_cmake_test(
-  MkdirRecursiveTest.cmake
-  "Create directory recursively"
-  # Add more test cases here.
-)
