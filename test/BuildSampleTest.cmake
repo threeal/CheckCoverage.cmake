@@ -31,10 +31,25 @@ function(build_sample)
   endif()
 endfunction()
 
+function(test_sample)
+  message(STATUS "Testing sample project")
+  find_program(CTEST_PROGRAM ctest REQUIRED)
+  execute_process(
+    COMMAND ${CTEST_PROGRAM}
+      --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
+      --no-tests=error
+    RESULT_VARIABLE RES
+  )
+  if(NOT RES EQUAL 0)
+    message(FATAL_ERROR "Failed to test sample project")
+  endif()
+endfunction()
+
 if("Build sample project" MATCHES ${TEST_MATCHES})
   math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
   configure_sample()
   build_sample()
+  test_sample()
 endif()
 
 if(TEST_COUNT LESS_EQUAL 0)
