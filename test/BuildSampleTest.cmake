@@ -45,11 +45,26 @@ function(test_sample)
   endif()
 endfunction()
 
+function(check_sample_test_coverage)
+  message(STATUS "Checking sample project test coverage")
+  find_program(GCOVR_PROGRAM gcovr REQUIRED)
+  execute_process(
+    COMMAND ${GCOVR_PROGRAM}
+      --root ${CMAKE_CURRENT_LIST_DIR}/sample
+      --fail-under-line 100
+    RESULT_VARIABLE RES
+  )
+  if(NOT RES EQUAL 0)
+    message(FATAL_ERROR "Failed to check sample project test coverage")
+  endif()
+endfunction()
+
 if("Build sample project" MATCHES ${TEST_MATCHES})
   math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
   configure_sample()
   build_sample()
   test_sample()
+  check_sample_test_coverage()
 endif()
 
 if(TEST_COUNT LESS_EQUAL 0)
