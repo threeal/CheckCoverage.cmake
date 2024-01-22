@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
 project(
-  MyMkdir
-  VERSION 0.0.0
-  DESCRIPTION "A starter CMake package for creating directories recursively"
-  HOMEPAGE_URL https://github.com/threeal/cmake-starter
+  CheckCoverage
+  VERSION 0.1.0
+  DESCRIPTION "Check for test coverage in your CMake project"
+  HOMEPAGE_URL https://github.com/threeal/CheckCoverage.cmake
   LANGUAGES NONE
 )
 
