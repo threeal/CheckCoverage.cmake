@@ -73,7 +73,7 @@ function(check_sample_test_coverage)
   endif()
 endfunction()
 
-if("Build sample project" MATCHES ${TEST_MATCHES})
+if("Check test coverage" MATCHES ${TEST_MATCHES})
   math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
   configure_sample()
   build_sample()
