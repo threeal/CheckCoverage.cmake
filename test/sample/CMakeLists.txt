@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Sample)
 
+# Add information to the CMake cache if it is built on MSVC.
+if(MSVC)
+  set(MSVC ${MSVC} CACHE BOOL "")
+endif()
+
 add_compile_options(--coverage -O0)
 add_link_options(--coverage)
 
