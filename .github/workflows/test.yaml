@@ -16,7 +16,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
-      - name: Install Dependencies
+      - name: Install gcovr
+        if: matrix.os != 'windows'
         run: pipx install gcovr
 
       - name: Configure Project
