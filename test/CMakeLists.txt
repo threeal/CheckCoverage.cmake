@@ -13,4 +13,5 @@ endfunction()
 add_cmake_test(
   CheckCoverageTest.cmake
   "Check test coverage"
+  "Check test coverage without coverage flags"
 )

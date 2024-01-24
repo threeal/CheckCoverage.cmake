@@ -11,13 +11,17 @@ include(CheckCoverage)
 
 add_library(fibonacci src/fibonacci.cpp)
 target_include_directories(fibonacci PUBLIC include)
-target_check_coverage(fibonacci)
+if(NOT WITHOUT_COVERAGE_FLAGS)
+  target_check_coverage(fibonacci)
+endif()
 
 enable_testing()
 
 add_executable(fibonacci_test test/fibonacci_test.cpp)
 target_link_libraries(fibonacci_test PRIVATE fibonacci)
-target_check_coverage(fibonacci_test)
+if(NOT WITHOUT_COVERAGE_FLAGS)
+  target_check_coverage(fibonacci_test)
+endif()
 
 add_test(
   NAME fibonacci_test
