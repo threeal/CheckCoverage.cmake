@@ -6,11 +6,16 @@ endif()
 set(TEST_COUNT 0)
 
 function(configure_sample)
+  cmake_parse_arguments(ARG "WITHOUT_COVERAGE_FLAGS" "" "" ${ARGN})
   message(STATUS "Configuring sample project")
+  if(ARG_WITHOUT_COVERAGE_FLAGS)
+    list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
+  endif()
   execute_process(
     COMMAND ${CMAKE_COMMAND}
       -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
       -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
+      ${CONFIGURE_ARGS}
       --fresh
       ${CMAKE_CURRENT_LIST_DIR}/sample
     RESULT_VARIABLE RES
@@ -47,6 +52,8 @@ function(test_sample)
 endfunction()
 
 function(check_sample_test_coverage)
+  cmake_parse_arguments(ARG SHOULD_FAIL "" "" ${ARGN})
+
   message(STATUS "Getting sample project build information")
   execute_process(
     COMMAND ${CMAKE_COMMAND} -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
@@ -68,17 +75,27 @@ function(check_sample_test_coverage)
       --fail-under-line 100
     RESULT_VARIABLE RES
   )
-  if(NOT RES EQUAL 0)
+  if(ARG_SHOULD_FAIL AND RES EQUAL 0)
+    message(FATAL_ERROR "Sample project test coverage check should be failed")
+  elseif(NOT ARG_SHOULD_FAIL AND NOT RES EQUAL 0)
     message(FATAL_ERROR "Failed to check sample project test coverage")
   endif()
 endfunction()
 
-if("Build sample project" MATCHES ${TEST_MATCHES})
+if("Check test coverage" MATCHES ${TEST_MATCHES})
   math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
   configure_sample()
   build_sample()
   test_sample()
   check_sample_test_coverage()
+endif()
+
+if("Check test coverage without coverage flags" MATCHES ${TEST_MATCHES})
+  math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
+  configure_sample(WITHOUT_COVERAGE_FLAGS)
+  build_sample()
+  test_sample()
+  check_sample_test_coverage(SHOULD_FAIL)
 endif()
 
 if(TEST_COUNT LESS_EQUAL 0)
