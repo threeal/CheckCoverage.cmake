@@ -47,6 +47,19 @@ function(test_sample)
 endfunction()
 
 function(check_sample_test_coverage)
+  message(STATUS "Getting sample project build information")
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
+    OUTPUT_VARIABLE OUT
+  )
+  string(REPLACE "\n" ";" VARS ${OUT})
+  foreach(VAR ${VARS})
+    if(VAR STREQUAL MSVC:BOOL=1)
+      message(WARNING "Skipping sample project test coverage check on MSVC")
+      return()
+    endif()
+  endforeach()
+
   message(STATUS "Checking sample project test coverage")
   find_program(GCOVR_PROGRAM gcovr REQUIRED)
   execute_process(
