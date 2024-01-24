@@ -7,16 +7,17 @@ if(MSVC)
   set(MSVC ${MSVC} CACHE BOOL "")
 endif()
 
-add_compile_options(--coverage -O0)
-add_link_options(--coverage)
+include(CheckCoverage)
 
 add_library(fibonacci src/fibonacci.cpp)
 target_include_directories(fibonacci PUBLIC include)
+target_check_coverage(fibonacci)
 
 enable_testing()
 
 add_executable(fibonacci_test test/fibonacci_test.cpp)
 target_link_libraries(fibonacci_test PRIVATE fibonacci)
+target_check_coverage(fibonacci_test)
 
 add_test(
   NAME fibonacci_test
