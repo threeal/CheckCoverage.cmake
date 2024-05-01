@@ -1,10 +1,3 @@
-# Matches everything if not defined
-if(NOT TEST_MATCHES)
-  set(TEST_MATCHES ".*")
-endif()
-
-set(TEST_COUNT 0)
-
 function(configure_sample)
   cmake_parse_arguments(ARG "WITHOUT_COVERAGE_FLAGS" "" "" ${ARGN})
   message(STATUS "Configuring sample project")
@@ -82,22 +75,24 @@ function(check_sample_test_coverage)
   endif()
 endfunction()
 
-if("Check test coverage" MATCHES ${TEST_MATCHES})
-  math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
+function(test_check_test_coverage)
   configure_sample()
   build_sample()
   test_sample()
   check_sample_test_coverage()
-endif()
+endfunction()
 
-if("Check test coverage without coverage flags" MATCHES ${TEST_MATCHES})
-  math(EXPR TEST_COUNT "${TEST_COUNT} + 1")
+function(test_check_test_coverage_without_coverage_flags)
   configure_sample(WITHOUT_COVERAGE_FLAGS)
   build_sample()
   test_sample()
   check_sample_test_coverage(SHOULD_FAIL)
+endfunction()
+
+if(NOT DEFINED TEST_COMMAND)
+  message(FATAL_ERROR "The 'TEST_COMMAND' variable should be defined")
+elseif(NOT COMMAND test_${TEST_COMMAND})
+  message(FATAL_ERROR "Unable to find a command named 'test_${TEST_COMMAND}'")
 endif()
 
-if(TEST_COUNT LESS_EQUAL 0)
-  message(FATAL_ERROR "Nothing to test with: ${TEST_MATCHES}")
-endif()
+cmake_language(CALL test_${TEST_COMMAND})
