@@ -25,16 +25,15 @@ if(NOT SUBPROJECT)
 
   include(CMakePackageConfigHelpers)
   write_basic_package_version_file(
-    MyMkdirConfigVersion.cmake
+    CheckCoverageConfigVersion.cmake
     COMPATIBILITY SameMajorVersion
   )
 
   install(
     FILES
       cmake/CheckCoverage.cmake
-      cmake/MkdirRecursive.cmake
-      cmake/MyMkdirConfig.cmake
-      ${CMAKE_CURRENT_BINARY_DIR}/MyMkdirConfigVersion.cmake
-    DESTINATION lib/cmake/MyMkdir
+      cmake/CheckCoverageConfig.cmake
+      ${CMAKE_CURRENT_BINARY_DIR}/CheckCoverageConfigVersion.cmake
+    DESTINATION lib/cmake/CheckCoverage
   )
 endif()
