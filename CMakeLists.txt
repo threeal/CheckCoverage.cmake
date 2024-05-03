@@ -32,7 +32,6 @@ if(NOT SUBPROJECT)
   install(
     FILES
       cmake/CheckCoverage.cmake
-      cmake/MkdirRecursive.cmake
       cmake/CheckCoverageConfig.cmake
       ${CMAKE_CURRENT_BINARY_DIR}/CheckCoverageConfigVersion.cmake
     DESTINATION lib/cmake/CheckCoverage
