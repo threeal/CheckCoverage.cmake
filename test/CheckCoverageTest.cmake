@@ -5,7 +5,7 @@ function(configure_sample)
     list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
   endif()
   execute_process(
-    COMMAND ${CMAKE_COMMAND}
+    COMMAND "${CMAKE_COMMAND}"
       -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
       -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
       ${CONFIGURE_ARGS}
@@ -21,7 +21,7 @@ endfunction()
 function(build_sample)
   message(STATUS "Building sample project")
   execute_process(
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_LIST_DIR}/sample/build
+    COMMAND "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build
     RESULT_VARIABLE RES
   )
   if(NOT RES EQUAL 0)
@@ -33,7 +33,7 @@ function(test_sample)
   message(STATUS "Testing sample project")
   find_program(CTEST_PROGRAM ctest REQUIRED)
   execute_process(
-    COMMAND ${CTEST_PROGRAM}
+    COMMAND "${CTEST_PROGRAM}"
       -C debug
       --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
       --no-tests=error
@@ -49,10 +49,10 @@ function(check_sample_test_coverage)
 
   message(STATUS "Getting sample project build information")
   execute_process(
-    COMMAND ${CMAKE_COMMAND} -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
+    COMMAND "${CMAKE_COMMAND}" -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
     OUTPUT_VARIABLE OUT
   )
-  string(REPLACE "\n" ";" VARS ${OUT})
+  string(REPLACE "\n" ";" VARS "${OUT}")
   foreach(VAR ${VARS})
     if(VAR STREQUAL MSVC:BOOL=1)
       message(WARNING "Skipping sample project test coverage check on MSVC")
@@ -63,7 +63,7 @@ function(check_sample_test_coverage)
   message(STATUS "Checking sample project test coverage")
   find_program(GCOVR_PROGRAM gcovr REQUIRED)
   execute_process(
-    COMMAND ${GCOVR_PROGRAM}
+    COMMAND "${GCOVR_PROGRAM}"
       --root ${CMAKE_CURRENT_LIST_DIR}/sample
       --fail-under-line 100
     RESULT_VARIABLE RES

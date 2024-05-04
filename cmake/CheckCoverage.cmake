@@ -13,17 +13,17 @@ function(target_check_coverage TARGET)
   endif()
 
   # Append options for enabling test coverage check.
-  target_compile_options(${TARGET} PRIVATE --coverage -O0 -fno-exceptions)
-  target_link_options(${TARGET} PRIVATE --coverage)
+  target_compile_options("${TARGET}" PRIVATE --coverage -O0 -fno-exceptions)
+  target_link_options("${TARGET}" PRIVATE --coverage)
 
   # Remove GCDA files every time the target is relinked.
-  get_target_property(TARGET_BINARY_DIR ${TARGET} BINARY_DIR)
-  get_target_property(TARGET_SOURCES ${TARGET} SOURCES)
+  get_target_property(TARGET_BINARY_DIR "${TARGET}" BINARY_DIR)
+  get_target_property(TARGET_SOURCES "${TARGET}" SOURCES)
   foreach(SOURCE ${TARGET_SOURCES})
     set(GCDA ${TARGET_BINARY_DIR}/CMakeFiles/${TARGET}.dir/${SOURCE}.gcda)
     add_custom_command(
-      TARGET ${TARGET} PRE_LINK
-      COMMAND ${CMAKE_COMMAND} -E rm -f ${GCDA}
+      TARGET "${TARGET}" PRE_LINK
+      COMMAND "${CMAKE_COMMAND}" -E rm -f "${GCDA}"
     )
   endforeach()
 endfunction()

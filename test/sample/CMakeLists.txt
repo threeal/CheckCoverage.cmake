@@ -4,7 +4,7 @@ project(Sample)
 
 # Add information to the CMake cache if it is built on MSVC.
 if(MSVC)
-  set(MSVC ${MSVC} CACHE BOOL "")
+  set(MSVC "${MSVC}" CACHE BOOL "")
 endif()
 
 include(CheckCoverage)
