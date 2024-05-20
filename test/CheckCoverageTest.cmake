@@ -89,10 +89,4 @@ function("Check test coverage without coverage flags")
   check_sample_test_coverage(SHOULD_FAIL)
 endfunction()
 
-if(NOT DEFINED TEST_COMMAND)
-  message(FATAL_ERROR "The 'TEST_COMMAND' variable should be defined")
-elseif(NOT COMMAND "${TEST_COMMAND}")
-  message(FATAL_ERROR "Unable to find a command named '${TEST_COMMAND}'")
-endif()
-
 cmake_language(CALL "${TEST_COMMAND}")
