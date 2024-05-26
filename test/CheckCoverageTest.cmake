@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
+
 function(configure_sample)
   cmake_parse_arguments(ARG "WITHOUT_COVERAGE_FLAGS" "" "" ${ARGN})
   message(STATUS "Configuring sample project")
