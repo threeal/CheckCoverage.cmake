@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 function(configure_sample)
-  cmake_parse_arguments(ARG "WITHOUT_COVERAGE_FLAGS" "" "" ${ARGN})
+  cmake_parse_arguments(PARSE_ARGV 0 ARG WITHOUT_COVERAGE_FLAGS "" "")
   message(STATUS "Configuring sample project")
   if(ARG_WITHOUT_COVERAGE_FLAGS)
     list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
@@ -47,7 +47,7 @@ function(test_sample)
 endfunction()
 
 function(check_sample_test_coverage)
-  cmake_parse_arguments(ARG SHOULD_FAIL "" "" ${ARGN})
+  cmake_parse_arguments(PARSE_ARGV 0 ARG SHOULD_FAIL "" "")
 
   message(STATUS "Getting sample project build information")
   execute_process(
