@@ -1,49 +1,43 @@
 cmake_minimum_required(VERSION 3.5)
 
+file(
+  DOWNLOAD https://threeal.github.io/assertion-cmake/v0.2.0
+    ${CMAKE_BINARY_DIR}/Assertion.cmake
+  EXPECTED_MD5 4ee0e5217b07442d1a31c46e78bb5fac)
+include(${CMAKE_BINARY_DIR}/Assertion.cmake)
+
 function(configure_sample)
   cmake_parse_arguments(PARSE_ARGV 0 ARG WITHOUT_COVERAGE_FLAGS "" "")
   message(STATUS "Configuring sample project")
   if(ARG_WITHOUT_COVERAGE_FLAGS)
     list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
   endif()
-  execute_process(
+  assert_execute_process(
     COMMAND "${CMAKE_COMMAND}"
       -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
       -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
       ${CONFIGURE_ARGS}
       --fresh
       ${CMAKE_CURRENT_LIST_DIR}/sample
-    RESULT_VARIABLE RES
   )
-  if(NOT RES EQUAL 0)
-    message(FATAL_ERROR "Failed to configure sample project")
-  endif()
 endfunction()
 
 function(build_sample)
   message(STATUS "Building sample project")
-  execute_process(
+  assert_execute_process(
     COMMAND "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build
-    RESULT_VARIABLE RES
   )
-  if(NOT RES EQUAL 0)
-    message(FATAL_ERROR "Failed to build sample project")
-  endif()
 endfunction()
 
 function(test_sample)
   message(STATUS "Testing sample project")
   find_program(CTEST_PROGRAM ctest REQUIRED)
-  execute_process(
+  assert_execute_process(
     COMMAND "${CTEST_PROGRAM}"
       -C debug
       --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
       --no-tests=error
-    RESULT_VARIABLE RES
   )
-  if(NOT RES EQUAL 0)
-    message(FATAL_ERROR "Failed to test sample project")
-  endif()
 endfunction()
 
 function(check_sample_test_coverage)
@@ -64,16 +58,19 @@ function(check_sample_test_coverage)
 
   message(STATUS "Checking sample project test coverage")
   find_program(GCOVR_PROGRAM gcovr REQUIRED)
-  execute_process(
-    COMMAND "${GCOVR_PROGRAM}"
-      --root ${CMAKE_CURRENT_LIST_DIR}/sample
-      --fail-under-line 100
-    RESULT_VARIABLE RES
-  )
-  if(ARG_SHOULD_FAIL AND RES EQUAL 0)
-    message(FATAL_ERROR "Sample project test coverage check should be failed")
-  elseif(NOT ARG_SHOULD_FAIL AND NOT RES EQUAL 0)
-    message(FATAL_ERROR "Failed to check sample project test coverage")
+  if(ARG_SHOULD_FAIL)
+    assert_execute_process(
+      COMMAND "${GCOVR_PROGRAM}"
+        --root ${CMAKE_CURRENT_LIST_DIR}/sample
+        --fail-under-line 100
+      ERROR "failed minimum line coverage"
+    )
+  else()
+    assert_execute_process(
+      COMMAND "${GCOVR_PROGRAM}"
+        --root ${CMAKE_CURRENT_LIST_DIR}/sample
+        --fail-under-line 100
+    )
   endif()
 endfunction()
 
