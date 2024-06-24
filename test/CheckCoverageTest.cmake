@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(
-  DOWNLOAD https://threeal.github.io/assertion-cmake/v0.2.0
+  DOWNLOAD https://github.com/threeal/assertion-cmake/releases/download/v0.3.0/Assertion.cmake
     ${CMAKE_BINARY_DIR}/Assertion.cmake
-  EXPECTED_MD5 4ee0e5217b07442d1a31c46e78bb5fac)
+  EXPECTED_MD5 851f49c10934d715df5d0b59c8b8c72a)
 include(${CMAKE_BINARY_DIR}/Assertion.cmake)
 
 function(configure_sample)
@@ -13,31 +13,28 @@ function(configure_sample)
     list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
   endif()
   assert_execute_process(
-    COMMAND "${CMAKE_COMMAND}"
+    "${CMAKE_COMMAND}"
       -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
       -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
       ${CONFIGURE_ARGS}
       --fresh
-      ${CMAKE_CURRENT_LIST_DIR}/sample
-  )
+      ${CMAKE_CURRENT_LIST_DIR}/sample)
 endfunction()
 
 function(build_sample)
   message(STATUS "Building sample project")
   assert_execute_process(
-    COMMAND "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build
-  )
+    "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build)
 endfunction()
 
 function(test_sample)
   message(STATUS "Testing sample project")
   find_program(CTEST_PROGRAM ctest REQUIRED)
   assert_execute_process(
-    COMMAND "${CTEST_PROGRAM}"
+    "${CTEST_PROGRAM}"
       -C debug
       --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
-      --no-tests=error
-  )
+      --no-tests=error)
 endfunction()
 
 function(check_sample_test_coverage)
@@ -63,14 +60,12 @@ function(check_sample_test_coverage)
       COMMAND "${GCOVR_PROGRAM}"
         --root ${CMAKE_CURRENT_LIST_DIR}/sample
         --fail-under-line 100
-      ERROR "failed minimum line coverage"
-    )
+      ERROR "failed minimum line coverage")
   else()
     assert_execute_process(
-      COMMAND "${GCOVR_PROGRAM}"
+      "${GCOVR_PROGRAM}"
         --root ${CMAKE_CURRENT_LIST_DIR}/sample
-        --fail-under-line 100
-    )
+        --fail-under-line 100)
   endif()
 endfunction()
 
