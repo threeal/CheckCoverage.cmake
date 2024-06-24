@@ -8,65 +8,68 @@ include(${CMAKE_BINARY_DIR}/Assertion.cmake)
 
 function(configure_sample)
   cmake_parse_arguments(PARSE_ARGV 0 ARG WITHOUT_COVERAGE_FLAGS "" "")
-  message(STATUS "Configuring sample project")
-  if(ARG_WITHOUT_COVERAGE_FLAGS)
-    list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
-  endif()
-  assert_execute_process(
-    "${CMAKE_COMMAND}"
-      -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
-      -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
-      ${CONFIGURE_ARGS}
-      --fresh
-      ${CMAKE_CURRENT_LIST_DIR}/sample)
+  section("configure sample project")
+    if(ARG_WITHOUT_COVERAGE_FLAGS)
+      list(APPEND CONFIGURE_ARGS -D WITHOUT_COVERAGE_FLAGS=TRUE)
+    endif()
+    assert_execute_process(
+      "${CMAKE_COMMAND}"
+        -B ${CMAKE_CURRENT_LIST_DIR}/sample/build
+        -D CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}
+        ${CONFIGURE_ARGS}
+        --fresh
+        ${CMAKE_CURRENT_LIST_DIR}/sample)
+  endsection()
 endfunction()
 
 function(build_sample)
-  message(STATUS "Building sample project")
-  assert_execute_process(
-    "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build)
+  section("build sample project")
+    assert_execute_process(
+      "${CMAKE_COMMAND}" --build ${CMAKE_CURRENT_LIST_DIR}/sample/build)
+  endsection()
 endfunction()
 
 function(test_sample)
-  message(STATUS "Testing sample project")
-  find_program(CTEST_PROGRAM ctest REQUIRED)
-  assert_execute_process(
-    "${CTEST_PROGRAM}"
-      -C debug
-      --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
-      --no-tests=error)
+  section("test sample project")
+    find_program(CTEST_PROGRAM ctest REQUIRED)
+    assert_execute_process(
+      "${CTEST_PROGRAM}"
+        -C debug
+        --test-dir ${CMAKE_CURRENT_LIST_DIR}/sample/build
+        --no-tests=error)
+  endsection()
 endfunction()
 
 function(check_sample_test_coverage)
   cmake_parse_arguments(PARSE_ARGV 0 ARG SHOULD_FAIL "" "")
 
-  message(STATUS "Getting sample project build information")
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
-    OUTPUT_VARIABLE OUT
-  )
-  string(REPLACE "\n" ";" VARS "${OUT}")
-  foreach(VAR ${VARS})
-    if(VAR STREQUAL MSVC:BOOL=1)
-      message(WARNING "Skipping sample project test coverage check on MSVC")
-      return()
-    endif()
-  endforeach()
+  section("check sample project test coverage")
+    execute_process(
+      COMMAND "${CMAKE_COMMAND}" -L -N ${CMAKE_CURRENT_LIST_DIR}/sample/build
+      OUTPUT_VARIABLE OUT
+    )
+    string(REPLACE "\n" ";" VARS "${OUT}")
+    foreach(VAR ${VARS})
+      if(VAR STREQUAL MSVC:BOOL=1)
+        message(WARNING "skipp sample project test coverage check on MSVC")
+        return()
+      endif()
+    endforeach()
 
-  message(STATUS "Checking sample project test coverage")
-  find_program(GCOVR_PROGRAM gcovr REQUIRED)
-  if(ARG_SHOULD_FAIL)
-    assert_execute_process(
-      COMMAND "${GCOVR_PROGRAM}"
-        --root ${CMAKE_CURRENT_LIST_DIR}/sample
-        --fail-under-line 100
-      ERROR "failed minimum line coverage")
-  else()
-    assert_execute_process(
-      "${GCOVR_PROGRAM}"
-        --root ${CMAKE_CURRENT_LIST_DIR}/sample
-        --fail-under-line 100)
-  endif()
+    find_program(GCOVR_PROGRAM gcovr REQUIRED)
+    if(ARG_SHOULD_FAIL)
+      assert_execute_process(
+        COMMAND "${GCOVR_PROGRAM}"
+          --root ${CMAKE_CURRENT_LIST_DIR}/sample
+          --fail-under-line 100
+        ERROR "failed minimum line coverage")
+    else()
+      assert_execute_process(
+        "${GCOVR_PROGRAM}"
+          --root ${CMAKE_CURRENT_LIST_DIR}/sample
+          --fail-under-line 100)
+    endif()
+  endsection()
 endfunction()
 
 function("Check test coverage")
