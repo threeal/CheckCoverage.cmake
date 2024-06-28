@@ -7,7 +7,8 @@ if(MSVC)
   set(MSVC "${MSVC}" CACHE BOOL "")
 endif()
 
-include(CheckCoverage)
+find_package(
+  CheckCoverage REQUIRED PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake)
 
 add_library(fibonacci src/fibonacci.cpp)
 target_include_directories(fibonacci PUBLIC include)
