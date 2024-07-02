@@ -8,12 +8,13 @@ project(
   LANGUAGES NONE
 )
 
+option(CHECK_COVERAGE_ENABLE_TESTS "Enable test targets.")
 option(CHECK_COVERAGE_ENABLE_INSTALL "Enable install targets."
   "${PROJECT_IS_TOP_LEVEL}")
 
 include(cmake/CheckCoverage.cmake)
 
-if(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
+if(CHECK_COVERAGE_ENABLE_TESTS)
   enable_testing()
   add_subdirectory(test)
 endif()
