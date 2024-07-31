@@ -16,7 +16,11 @@ include(cmake/CheckCoverage.cmake)
 
 if(CHECK_COVERAGE_ENABLE_TESTS)
   enable_testing()
-  add_subdirectory(test)
+
+  add_test(
+    NAME check_coverage.cmake
+    COMMAND "${CMAKE_COMMAND}"
+      -P ${CMAKE_CURRENT_SOURCE_DIR}/test/check_coverage.cmake)
 endif()
 
 if(CHECK_COVERAGE_ENABLE_INSTALL)
