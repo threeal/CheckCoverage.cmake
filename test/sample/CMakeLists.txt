@@ -12,6 +12,7 @@ find_package(
 
 add_library(fibonacci src/fibonacci.cpp)
 target_include_directories(fibonacci PUBLIC include)
+set_property(TARGET fibonacci PROPERTY CXX_STANDARD 11)
 if(NOT WITHOUT_COVERAGE_FLAGS)
   target_check_coverage(fibonacci)
 endif()
@@ -20,6 +21,7 @@ enable_testing()
 
 add_executable(fibonacci_test test/fibonacci_test.cpp)
 target_link_libraries(fibonacci_test PRIVATE fibonacci)
+set_property(TARGET fibonacci_test PROPERTY CXX_STANDARD 11)
 if(NOT WITHOUT_COVERAGE_FLAGS)
   target_check_coverage(fibonacci_test)
 endif()
