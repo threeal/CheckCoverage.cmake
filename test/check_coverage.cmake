@@ -1,11 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-file(
-  DOWNLOAD https://github.com/threeal/assertion-cmake/releases/download/v1.0.0/Assertion.cmake
-    ${CMAKE_BINARY_DIR}/Assertion.cmake
-  EXPECTED_MD5 1d8ec589d6cc15772581bf77eb3873ff)
-include(${CMAKE_BINARY_DIR}/Assertion.cmake)
-
 function(configure_sample)
   cmake_parse_arguments(PARSE_ARGV 0 ARG WITHOUT_COVERAGE_FLAGS "" "")
   section("configure sample project")
@@ -71,18 +63,16 @@ function(check_sample_test_coverage)
   endsection()
 endfunction()
 
-function("Check test coverage")
+section("it should check test coverage")
   configure_sample()
   build_sample()
   test_sample()
   check_sample_test_coverage()
-endfunction()
+endsection()
 
-function("Check test coverage without coverage flags")
+section("it should check test coverage without coverage flags")
   configure_sample(WITHOUT_COVERAGE_FLAGS)
   build_sample()
   test_sample()
   check_sample_test_coverage(SHOULD_FAIL)
-endfunction()
-
-cmake_language(CALL "${TEST_COMMAND}")
+endsection()
